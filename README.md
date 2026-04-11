@@ -27,13 +27,6 @@ The main goal of this project is to understand and practice real-world DevOps wo
 
 ---
 
-
-# ⚙️ How to Run Locally
-
-## 🚀 Go Web App – Local Setup Guide
-
----
-
 # ⚙️ How to Run Locally
 
 ## 🚀 Go Web App – Local Setup Guide
