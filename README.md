@@ -38,4 +38,8 @@ The main goal of this project is to understand and practice real-world DevOps wo
 ```bash
 git clone https://github.com/Reshmavinu/go-web-app-devops-practice.git
 cd go-web-app-devops-practice
-
+---
+2️⃣ Run the application
+🔨 Build the project
+```bash
+   go build -o main .
