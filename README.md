@@ -27,23 +27,27 @@ The main goal of this project is to understand and practice real-world DevOps wo
 
 ---
 
-## ⚙️ How to Run Locally
+# ⚙️ How to Run Locally
 
-# 🚀 Go Web App – Local Setup Guide
+## 🚀 Go Web App – Local Setup Guide
+
+---
 
 ## 1️⃣ Clone the repository
 
 ```bash
 git clone https://github.com/Reshmavinu/go-web-app-devops-practice.git
 cd go-web-app-devops-practice
+
 2️⃣ Run the application
-Build the project
-go build -o main .
-What it does:
+🔨 Build the project
+    go build -o main .
+📌 What it does:
 Compiles the entire Go package in the current folder (.)
 Creates a permanent executable named main
-Run the application
-./main
+▶️ Run the application
+   ./main
+
 🌐 Application URL
 
 Once the application starts, open:
