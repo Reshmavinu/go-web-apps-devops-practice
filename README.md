@@ -33,7 +33,7 @@ The main goal of this project is to understand and practice real-world DevOps wo
 
 ---
 
-## 1️⃣ Clone the repository
+ 1️⃣ Clone the repository
 
 ```bash
 git clone https://github.com/Reshmavinu/go-web-app-devops-practice.git
