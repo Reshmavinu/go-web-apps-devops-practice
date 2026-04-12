@@ -68,4 +68,7 @@ go build -o main .
 
 Open in browser:
 
-**http://localhost:8080**
+**http://localhost:8080/courses**
+
+<img width="1897" height="863" alt="image" src="https://github.com/user-attachments/assets/d1ab2ada-d631-43d7-bf70-e1202ffa8377" />
+
