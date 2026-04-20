@@ -8,8 +8,6 @@ on:
       - 'k8s/**'
       - 'README.md'
 	  
-#Ensures only one deployment runs at a time ,New runs wait instead of canceling previous ones
-
 concurrency:
   group: prod-deploy
   cancel-in-progress: false
