@@ -6,7 +6,7 @@ on:
     paths-ignore:
       - 'helm/**'
       - 'k8s/**'
-      - 'README.md'	  
+      - 'README.md'
 concurrency:
   group: prod-deploy
   cancel-in-progress: false
@@ -64,10 +64,15 @@ jobs:
     needs: [build, lint]
 
     outputs:
-      image_tag: ${{ steps.meta.outputs.tags }}
+      image_tag: ${{ steps.vars.outputs.tag }}
 
     steps:
       - uses: actions/checkout@v4
+
+      # ✅ Generate single source of truth tag
+      - name: Set image tag
+        id: vars
+        run: echo "tag=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -78,23 +83,17 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/go-web-apps-devops-practice
-          tags: |
-            type=sha
-            type=raw,value=latest
-
+      # ✅ Build & push using SAME tag
       - name: Build & push
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/go-web-apps-devops-practice:cache
-          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/go-web-apps-devops-practice:cache,mode=max
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.tag }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:cache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:cache,mode=max
 
   # ---------------------------
   # 4. Deploy to DEV
@@ -112,14 +111,15 @@ jobs:
       - name: Install yq
         run: sudo snap install yq
 
+      # ✅ Use SAME tag from docker job
       - name: Update Helm (nonprod)
         run: |
-          yq e -i '.image.tag = "${{ github.sha }}"' helm/go-web-app-chart/values.yaml
+          yq e -i '.image.tag = "${{ needs.docker.outputs.image_tag }}"' helm/go-web-app-chart/values.yaml
 
       - name: Commit & push
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add .
-          git commit -m "Deploy nonprod: ${{ github.sha }}"
+          git commit -m "Deploy nonprod: ${{ needs.docker.outputs.image_tag }}"
           git push
