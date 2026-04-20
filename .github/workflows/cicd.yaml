@@ -6,8 +6,7 @@ on:
     paths-ignore:
       - 'helm/**'
       - 'k8s/**'
-      - 'README.md'
-	  
+      - 'README.md'	  
 concurrency:
   group: prod-deploy
   cancel-in-progress: false
